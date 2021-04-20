@@ -1,11 +1,14 @@
 const board = document.querySelector('.tic-tac-toe');
 const popupElement = document.querySelector('.popup-wrapper');
 const popupElementSection = document.querySelector('.popup');
-const boardVH = 5;
+const startButton = document.querySelector('.start-button');
+const settings = document.querySelector('.settings');
+const boardFieldsInput = document.querySelector('.board-size');
 const xSound = new Audio('lib/tic.mp3');
 const ySound = new Audio('lib/tac.mp3');
 const weSound = new Audio('lib/we.mp3');
 
+let boardVH = 3;
 let fields;
 let winX = '';
 let winO = '';
@@ -15,6 +18,17 @@ if (popupElementSection) {
     popupElementSection.addEventListener('click', function() {
         popupElement.classList.toggle('hidden');
         resetGame();
+    });
+}
+
+if (startButton) {
+    startButton.addEventListener('click', function() {
+        boardFieldsInputValue = parseInt(boardFieldsInput.value);
+        if (isNaN(boardFieldsInputValue) || boardFieldsInputValue > 10) {
+            boardFieldsInputValue = 3;
+        }
+
+        initBoard(boardFieldsInputValue)
     });
 }
 
@@ -39,7 +53,6 @@ function checkWinner() {
     let lrCountNext = true;
 
     let rlNext = (boardVH-1);
-    let rlCountNext = true;
     let rlDiag = '';
 
     let series = '';
@@ -49,19 +62,21 @@ function checkWinner() {
     //Loop through fields and check horizontal winner
     fields.forEach(function(field, idx) {
         const fieldSymbol = field.textContent;
+        const theModulo = (idx%boardVH);
+
         if (fieldSymbol === 'X' || fieldSymbol === 'O')
             filledFields++;
 
-        if ((idx%boardVH) === 0)
+        if (theModulo === 0)
             series = '';
 
-        if (!vertSeries[(idx%boardVH)])
-            vertSeries[(idx%boardVH)] = '';
+        if (!vertSeries[theModulo])
+            vertSeries[theModulo] = '';
 
-        vertSeries[(idx%boardVH)] += fieldSymbol;
+        vertSeries[theModulo] += fieldSymbol;
         series += fieldSymbol;
 
-        if (rlNext === (idx%boardVH) && (idx < ((boardVH*boardVH) -1))) {
+        if (rlNext === theModulo && (idx < ((boardVH*boardVH) -1))) {
             rlNext--;
             if (rlNext < 0)
                 rlNext = boardVH-1;
@@ -69,7 +84,7 @@ function checkWinner() {
             rlDiag += fieldSymbol;
         }
 
-        if (lrNext === (idx%boardVH)) {
+        if (lrNext === theModulo) {
             if (lrCountNext) {
                 lrDiag += fieldSymbol;
                 lrNext++;
@@ -99,7 +114,7 @@ function checkWinner() {
     if (!haveWinner) {
         if (lrDiag == winX || lrDiag == winO) {
             showPopup('Winner winner', 'Chicken Dinner', 'warning');
-                haveWinner = true;
+            haveWinner = true;
         }
     }
 
@@ -120,11 +135,14 @@ function resetGame() {
         field.innerHTML = '&nbsp;';
     });
 
+    settings.classList.toggle('hidden');
+    board.classList.toggle('hidden');
+
     weSound.pause();
     weSound.currentTime = 0;
 }
 
-function initBoard(rowCol = 2) {
+function initBoard(rowCol = 3) {
     board.innerHTML = '';
     board.style = `grid-template-columns: repeat(${rowCol}, 1fr)`;
     winX = '';
@@ -144,6 +162,10 @@ function initBoard(rowCol = 2) {
             addItem(field);
         });
     });
+
+    boardVH = rowCol;
+    settings.classList.toggle('hidden');
+    board.classList.toggle('hidden');
 }
 
 function showPopup(title, message, alert = warning) {
@@ -159,4 +181,3 @@ function showPopup(title, message, alert = warning) {
     popupElement.classList.remove('hidden');
 }
 
-initBoard(boardVH);
