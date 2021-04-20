@@ -26,9 +26,12 @@ function checkWinner() {
     let vertSeries = [];
     let series = '';
     let haveWinner = false;
+    let filledFields = 0;
 
     fields.forEach(function(field, idx) {
         const fieldSymbol = field.textContent;
+        if (fieldSymbol === 'X' || fieldSymbol === 'O')
+            filledFields++;
 
         if ((idx%boardVH) === 0)
             series = '';
@@ -50,9 +53,12 @@ function checkWinner() {
             if (serie === winX || serie === winO) {
                 popupElement.classList.toggle('hidden');
                 haveWinner = true;
-                return;
             }
         });
+    }
+
+    if ((filledFields === boardVH*boardVH) && !haveWinner) {
+        popupElement.classList.toggle('hidden');
     }
 }
 
@@ -83,6 +89,12 @@ function initBoard(rowCol = 2) {
         });
     });
 }
+
+function showPopup(title, message, colour = yellow) {
+    popupElement.querySelector('.')
+    popupElement.classList.remove('hidden');
+}
+
 
 initBoard(boardVH);
 
