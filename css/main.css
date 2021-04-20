@@ -38,10 +38,18 @@ html, body {
     width: 500px;
     height: 100px;    
     border: 1px solid purple;
-    background: rgba(255, 255, 0, 0.5);
     text-align: center;
     border-radius: 5px;
 }
+
+.alert-warning {
+    background: rgba(255, 255, 0, 0.5);
+}
+
+.alert-danger {
+    background: rgba(255, 30, 0, 0.5);
+}
+
 
 .hidden {
     display: none;
