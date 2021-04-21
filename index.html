@@ -12,27 +12,55 @@
         <section class="popup alert-warning">
             <h3 class="title">Winner winner</h3>
             <p class="text">Chicken Dinner</p>
+            <input type="button" value="Click here to continue">
         </section>
     </div>
-    <header>
-        <h1>Tic Tac Toe</h1>
-        <h2>Succes met spelen!</h2>
+    <header class="header">
+        <section class="">
+            <h1>Tic Tac Toe</h1>
+            <h2>Succes met spelen!</h2>
+        </section>
+        <section class="players">
+            <article class="player-article">Player one (X): <span class="p-one-name"></span></article>
+            <article class="player-article">Player two (O): <span class="p-two-name"></span></article>
+        </section>
+        <section>
+            <input type="button" class="basic-input reset-game" value="Reset game">
+        </section>
     </header>
-    <main class="main">
-        <section class="tic-tac-toe hidden">
-        </section>
-        <section class="settings">
-            <p>
-                Geef aan hoeveel vakjes je het bord wilt
-            </p>
-            <div>
-                <input type="number" class="basic-input small-input board-size" value="3">
-            </div>
-            <div class="button-container">
-                <input type="button" class="basic-input start-button" value="Klik om te starten">
-            </div>
-        </section>
-    </main>
+    <div class="wrapper">
+        <main class="main">
+            <section class="tic-tac-toe hidden">
+                <article>Currently Playing: <span class="turn">X</span></article>
+                <article class="board"></article>
+            </section>
+            <section class="settings">
+                <article>
+                    <div>
+                        Geef aan hoeveel vakjes je het bord wilt
+                    </div>
+                    <div>
+                        <input type="number" class="basic-input small-input board-size" value="3">
+                    </div>
+                </article>
+                <article>
+                    <div>
+                        Geef de namen van de spelers
+                    </div>
+                        <div>
+                        <input type="text" class="basic-input medium-input player-size player-one" value="PlayerOne">
+                        <input type="text" class="basic-input medium-input player-size player-two" value="PlayerTwo">
+                    </div>
+                </article>
+                <article>
+                    <div class="button-container">
+                        <input type="button" class="basic-input start-button" value="Klik om te starten">
+                    </div>
+                </article>
+            </section>
+        </main>
+        <section class="highschore"></section>
+    </div>
     <script src="js/main.js"></script>
 </body>
 </html>

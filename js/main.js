@@ -1,20 +1,32 @@
 //First get all the elements that we need
-const board = document.querySelector('.tic-tac-toe');
+const gameField = document.querySelector('.tic-tac-toe');
+const board = document.querySelector('.board');
 const popupElement = document.querySelector('.popup-wrapper');
 const popupElementSection = document.querySelector('.popup');
 const startButton = document.querySelector('.start-button');
 const settings = document.querySelector('.settings');
 const boardFieldsInput = document.querySelector('.board-size');
+const pOneField = document.querySelector('.player-one');
+const pTwoField = document.querySelector('.player-two');
+const pOneNamePlace = document.querySelector('.p-one-name');
+const pTwoNamePlace = document.querySelector('.p-two-name');
+const resetButton = document.querySelector('.reset-game');
+const highScoreEl = document.querySelector('.highschore');
+const turnEl = document.querySelector('.turn');
+
 //Initialize the sounds
 const xSound = new Audio('lib/tic.mp3');
 const ySound = new Audio('lib/tac.mp3');
-const weSound = new Audio('lib/we.mp3');
+const weSound = new Audio('lib/we2.mp3');
 
 //Define all the changable arrays
 let boardVH;
 let fields;
 let winX;
 let winO;
+let playerOne;
+let playerTwo;
+let players;
 let curElement = 'X';
 
 //Create eventlistner on the selection popup to hide it when clicked
@@ -34,8 +46,17 @@ if (startButton) {
             boardFieldsInputValue = 3;
         }
 
+        playerOne = pOneField.value;
+        playerTwo = pTwoField.value;
+        pOneNamePlace.textContent = playerOne;
+        pTwoNamePlace.textContent = playerTwo;
+        
         initBoard(boardFieldsInputValue)
     });
+}
+
+if (resetButton) {
+    resetButton.addEventListener('click', resetGame);
 }
 
 //Add an item (X or O) to the field. Might be changed later
@@ -49,6 +70,8 @@ function addItem(field) {
         }
 
         curElement = (curElement == 'X') ? 'O' : 'X';
+        turnEl.textContent = curElement;
+        
         checkWinner();
     }
 }
@@ -65,6 +88,7 @@ function checkWinner() {
     let series = '';
     let haveWinner = false;
     let filledFields = 0;
+    let winner;
 
     //Loop through fields and check horizontal winner
     fields.forEach(function(field, idx) {
@@ -102,6 +126,10 @@ function checkWinner() {
         }
 
         if (series === winX || series === winO) {
+            winner = 2;
+            if (series === winX) {
+                winner = 1;
+            }
             showPopup('Winner winner', 'Chicken Dinner', 'warning');
             haveWinner = true;
         }
@@ -111,6 +139,10 @@ function checkWinner() {
     if (!haveWinner) {
         vertSeries.forEach(function(serie) {
             if (serie === winX || serie === winO) {
+                winner = 2;
+                if (serie === winX) {
+                    winner = 1;
+                }
                 showPopup('Winner winner', 'Chicken Dinner', 'warning');
                 haveWinner = true;
             }
@@ -120,6 +152,10 @@ function checkWinner() {
     //Check for diagonal winners
     if (!haveWinner) {
         if (lrDiag == winX || lrDiag == winO) {
+            winner = 2;
+            if (lrDiag === winX) {
+                winner = 1;
+            }
             showPopup('Winner winner', 'Chicken Dinner', 'warning');
             haveWinner = true;
         }
@@ -127,9 +163,34 @@ function checkWinner() {
 
     if (!haveWinner) {
         if (rlDiag == winX || rlDiag == winO) {
+            winner = 2;
+            if (rlDiag === winX) {
+                winner = 1;
+            }
             showPopup('Winner winner', 'Chicken Dinner', 'warning');
-                haveWinner = true;
+            haveWinner = true;
         }
+    }
+
+    if (haveWinner) {
+        if (winner == 1) {
+            if (players[playerOne]) {
+                players[playerOne]++;
+            } else {
+                players[playerOne] = 1;
+            }
+        } else {
+            if (players[playerTwo]) {
+                players[playerTwo]++;
+            } else {
+                players[playerTwo] = 1;
+            }
+        }
+
+        console.log(players);
+        localStorage.setItem('bke_players', JSON.stringify(players));
+
+        showHighScore();
     }
 
     if ((filledFields === boardVH*boardVH) && !haveWinner) {
@@ -139,15 +200,12 @@ function checkWinner() {
 
 //Reset the game and show the start/ settings page again
 function resetGame() {
-    fields.forEach(function(field) {
-        field.innerHTML = '&nbsp;';
-    });
-
-    settings.classList.toggle('hidden');
-    board.classList.toggle('hidden');
+    settings.classList.remove('hidden');
+    gameField.classList.add('hidden');
 
     weSound.pause();
     weSound.currentTime = 0;
+    winner = 0;
 }
 
 //Initialize board, create fields
@@ -174,8 +232,8 @@ function initBoard(rowCol) {
     });
 
     boardVH = rowCol;
-    settings.classList.toggle('hidden');
-    board.classList.toggle('hidden');
+    settings.classList.add('hidden');
+    gameField.classList.remove('hidden');
 }
 
 //Show the popup message with overlay
@@ -190,4 +248,30 @@ function showPopup(title, message, alert = warning) {
     }
 
     popupElement.classList.remove('hidden');
+}
+
+function showHighScore() {
+    highScoreEl.innerHTML = '';
+
+    for (let key in players) {
+        const score = players[key];
+        const newEl = document.createElement('div');
+        newEl.textContent = `${key} - ${players[key]}`;
+        highScoreEl.appendChild(newEl);
+    };
+}
+
+getPlayers();
+function getPlayers() {
+    try {
+        players = JSON.parse(localStorage.getItem('bke_players'));
+    } catch {
+        console.log(1235);
+        players = { };
+    }
+    
+    if (!players) {
+        players = { };
+        localStorage.setItem('bke_players', JSON.stringify(players));
+    }
 }

@@ -1,19 +1,35 @@
 html, body {
-    padding: 0;
+    padding: 5px;
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.main {
-    margin: 0 auto;
+.players {
+    max-width: 500px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 10px;
 }
 
-.tic-tac-toe {
+.wrapper {
+    display: grid;
+    grid-template-columns: 80% 20%;
+}
+
+.wrapper section, .wrapper main {
+    border: 1px solid green;
+}
+
+.header {
+    margin-bottom: 25px;
+}
+
+.board {
     display: grid;
     gap: 25px;
 }
 
-.tic-tac-toe .field {
+.board .field {
     background-color: purple;
     color: yellow;
     line-height: 100px;
@@ -36,20 +52,23 @@ html, body {
     top: 5%;
     left: 150px;
     width: 500px;
-    height: 100px;    
+    height: 130px;    
     border: 1px solid purple;
     text-align: center;
     border-radius: 5px;
 }
 
 .alert-warning {
-    background: rgba(255, 255, 0, 0.5);
+    background: rgba(246, 199, 97, 0.5);
 }
 
 .alert-danger {
-    background: rgba(255, 30, 0, 0.5);
+    background: rgba(246, 36, 9, 0.5);
 }
 
+.alert-success {
+    background: rgba(80, 247, 88, 0.5);
+}
 
 .hidden {
     display: none;
@@ -71,4 +90,13 @@ html, body {
 .small-input {
     width: 45px;
     text-align: right;
+}
+
+.medium-input {
+    width: 90px;
+    text-align: left;    
+}
+
+.medium-input:first-child {
+    margin-right: 25px;
 }
