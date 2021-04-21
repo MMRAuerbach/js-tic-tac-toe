@@ -1,19 +1,23 @@
+//First get all the elements that we need
 const board = document.querySelector('.tic-tac-toe');
 const popupElement = document.querySelector('.popup-wrapper');
 const popupElementSection = document.querySelector('.popup');
 const startButton = document.querySelector('.start-button');
 const settings = document.querySelector('.settings');
 const boardFieldsInput = document.querySelector('.board-size');
+//Initialize the sounds
 const xSound = new Audio('lib/tic.mp3');
 const ySound = new Audio('lib/tac.mp3');
 const weSound = new Audio('lib/we.mp3');
 
-let boardVH = 3;
+//Define all the changable arrays
+let boardVH;
 let fields;
-let winX = '';
-let winO = '';
+let winX;
+let winO;
 let curElement = 'X';
 
+//Create eventlistner on the selection popup to hide it when clicked
 if (popupElementSection) {
     popupElementSection.addEventListener('click', function() {
         popupElement.classList.toggle('hidden');
@@ -21,9 +25,11 @@ if (popupElementSection) {
     });
 }
 
+//When people click on the start button, start the game
 if (startButton) {
     startButton.addEventListener('click', function() {
         boardFieldsInputValue = parseInt(boardFieldsInput.value);
+        //Larger then 10x10 will slow down computer
         if (isNaN(boardFieldsInputValue) || boardFieldsInputValue > 10) {
             boardFieldsInputValue = 3;
         }
@@ -32,6 +38,7 @@ if (startButton) {
     });
 }
 
+//Add an item (X or O) to the field. Might be changed later
 function addItem(field) {
     if (field.textContent.trim() == '') {
         field.textContent = curElement;
@@ -46,15 +53,15 @@ function addItem(field) {
     }
 }
 
+//Check if someone won or if there is a draw. 
 function checkWinner() {
     const vertSeries = [];
+
     let lrDiag = '';
     let lrNext = 0;
     let lrCountNext = true;
-
     let rlNext = (boardVH-1);
     let rlDiag = '';
-
     let series = '';
     let haveWinner = false;
     let filledFields = 0;
@@ -130,6 +137,7 @@ function checkWinner() {
     }
 }
 
+//Reset the game and show the start/ settings page again
 function resetGame() {
     fields.forEach(function(field) {
         field.innerHTML = '&nbsp;';
@@ -142,13 +150,14 @@ function resetGame() {
     weSound.currentTime = 0;
 }
 
-function initBoard(rowCol = 3) {
+//Initialize board, create fields
+function initBoard(rowCol) {
     board.innerHTML = '';
     board.style = `grid-template-columns: repeat(${rowCol}, 1fr)`;
     winX = '';
     winO = '';
     for (let i = 0; i < (rowCol*rowCol); i++) {
-        board.innerHTML += '<div class="field">&nbsp;</div>';
+        board.innerHTML += '<div class="field">&nbsp;</div>';//createElement and appendChild would be better
 
         if ((i%rowCol) === 0) {
             winX += 'X';
@@ -156,6 +165,7 @@ function initBoard(rowCol = 3) {
         }
     }
 
+    //Add event handler on the fields
     fields = document.querySelectorAll('.field');
     fields.forEach(function(field) {
         field.addEventListener('click', function() {
@@ -168,6 +178,7 @@ function initBoard(rowCol = 3) {
     board.classList.toggle('hidden');
 }
 
+//Show the popup message with overlay
 function showPopup(title, message, alert = warning) {
     popupElement.querySelector('.title').textContent = title;
     popupElement.querySelector('.text').textContent = message;
@@ -180,4 +191,3 @@ function showPopup(title, message, alert = warning) {
 
     popupElement.classList.remove('hidden');
 }
-
