@@ -4,17 +4,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    <link href="css/nes.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/main.css">
     <title>Tic-Tac-Toe</title>
 </head>
 <body>
-    <div class="popup-wrapper hidden">
-        <section class="popup alert-warning">
-            <h3 class="title">Winner winner</h3>
-            <p class="text">Chicken Dinner</p>
-            <input type="button" value="Click here to continue">
-        </section>
-    </div>
     <header class="header">
         <section class="">
             <h1>Tic Tac Toe</h1>
@@ -28,39 +23,49 @@
             <input type="button" class="basic-input reset-game" value="Reset game">
         </section>
     </header>
-    <div class="wrapper">
-        <main class="main">
-            <section class="tic-tac-toe hidden">
+    <main class="main">
+        <section class="settings">
+            <article>
+                <div>
+                    Geef aan hoeveel vakjes je het bord wilt
+                </div>
+                <div>
+                    <input type="number" class="basic-input small-input board-size" value="3">
+                </div>
+            </article>
+            <article>
+                <div>
+                    Geef de namen van de spelers
+                </div>
+                    <div>
+                    <input type="text" class="basic-input medium-input player-size player-one" value="PlayerOne">
+                    <input type="text" class="basic-input medium-input player-size player-two" value="PlayerTwo">
+                </div>
+            </article>
+            <article>
+                <div class="button-container">
+                    <input type="button" class="basic-input start-button" value="Klik om te starten">
+                </div>
+            </article>
+        </section>
+        <section class="tic-tac-toe hidden">
+            <section class="popup-wrapper hidden">
+                <article class="popup alert-warning">
+                    <h3 class="title">Winner winner</h3>
+                    <p class="text">Chicken Dinner</p>
+                    <input type="button" value="Click here to continue">
+                </article>
+                <article class="alert-warning">
+                    <h3>Highscore</h3>
+                    <article class="highschore"></article>
+                </article>
+            </section>    
+            <section>
                 <article>Currently Playing: <span class="turn">X</span></article>
                 <article class="board"></article>
             </section>
-            <section class="settings">
-                <article>
-                    <div>
-                        Geef aan hoeveel vakjes je het bord wilt
-                    </div>
-                    <div>
-                        <input type="number" class="basic-input small-input board-size" value="3">
-                    </div>
-                </article>
-                <article>
-                    <div>
-                        Geef de namen van de spelers
-                    </div>
-                        <div>
-                        <input type="text" class="basic-input medium-input player-size player-one" value="PlayerOne">
-                        <input type="text" class="basic-input medium-input player-size player-two" value="PlayerTwo">
-                    </div>
-                </article>
-                <article>
-                    <div class="button-container">
-                        <input type="button" class="basic-input start-button" value="Klik om te starten">
-                    </div>
-                </article>
-            </section>
-        </main>
-        <section class="highschore"></section>
-    </div>
+        </section>
+    </main>        
     <script src="js/main.js"></script>
 </body>
 </html>

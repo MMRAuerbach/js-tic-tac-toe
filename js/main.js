@@ -28,11 +28,14 @@ let playerOne;
 let playerTwo;
 let players;
 let curElement = 'X';
+let playing = false;
 
 //Create eventlistner on the selection popup to hide it when clicked
 if (popupElementSection) {
     popupElementSection.addEventListener('click', function() {
-        popupElement.classList.toggle('hidden');
+        settings.classList.remove('hidden');
+        gameField.classList.add('hidden');
+        popupElement.classList.add('hidden');
         resetGame();
     });
 }
@@ -50,7 +53,7 @@ if (startButton) {
         playerTwo = pTwoField.value;
         pOneNamePlace.textContent = playerOne;
         pTwoNamePlace.textContent = playerTwo;
-        
+
         initBoard(boardFieldsInputValue)
     });
 }
@@ -61,7 +64,7 @@ if (resetButton) {
 
 //Add an item (X or O) to the field. Might be changed later
 function addItem(field) {
-    if (field.textContent.trim() == '') {
+    if (field.textContent.trim() == '' && playing) {
         field.textContent = curElement;
         if (curElement == 'X') {
             ySound.play();
@@ -186,8 +189,7 @@ function checkWinner() {
                 players[playerTwo] = 1;
             }
         }
-
-        console.log(players);
+        playing = false;
         localStorage.setItem('bke_players', JSON.stringify(players));
 
         showHighScore();
@@ -195,17 +197,20 @@ function checkWinner() {
 
     if ((filledFields === boardVH*boardVH) && !haveWinner) {
         showPopup('Loser loser', 'Chicken Foser', 'danger');
+        playing = false;
     }
 }
 
 //Reset the game and show the start/ settings page again
 function resetGame() {
     settings.classList.remove('hidden');
+    popupElement.add('hidden');
     gameField.classList.add('hidden');
-
+    
     weSound.pause();
     weSound.currentTime = 0;
     winner = 0;
+    playing = true;
 }
 
 //Initialize board, create fields
@@ -232,7 +237,9 @@ function initBoard(rowCol) {
     });
 
     boardVH = rowCol;
+    playing = true; 
     settings.classList.add('hidden');
+    popupElement.classList.add('hidden');
     gameField.classList.remove('hidden');
 }
 

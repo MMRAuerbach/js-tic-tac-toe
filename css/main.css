@@ -1,61 +1,5 @@
-html, body {
-    padding: 5px;
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.players {
-    max-width: 500px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 10px;
-}
-
-.wrapper {
-    display: grid;
-    grid-template-columns: 80% 20%;
-}
-
-.wrapper section, .wrapper main {
-    border: 1px solid green;
-}
-
-.header {
-    margin-bottom: 25px;
-}
-
-.board {
-    display: grid;
-    gap: 25px;
-}
-
-.board .field {
-    background-color: purple;
-    color: yellow;
-    line-height: 100px;
-    font-size: 40px;
-    text-align: center;
-}
-
-.popup-wrapper {
-    position: fixed;
-    top: 0;
-    z-index: 100;
-    overflow: hidden;
-    background: rgba(0,0,0,0.4);
-    width: 100%;
-    height: 100%;
-}
-
-.popup {
-    position: fixed;
-    top: 5%;
-    left: 150px;
-    width: 500px;
-    height: 130px;    
-    border: 1px solid purple;
-    text-align: center;
-    border-radius: 5px;
+input, a:hover, button {
+    cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABFklEQVRYR9WXURLDIAhE6/0PbSdOtUpcd1Gnpv1KGpTHBpCE1/cXq+vrMph7dGvXZTtpfW10DCA5jrH1H0Jhs5E0hnZdCR+vb5S8Nn8mQCeS9BdSalYJqMBjAGzq59xAESN7VFVUgV8AZB/dZBR7QTFDCqGquvUBVVoEtgIwpQRzmANSFHgWQKExHdIrPeuMvQNDarXe6nC/AutgV3JW+6bgqQLeV8FekRtgV+ToDKEKnACYKsfZjjkam7a0ZpYTytwmgainpC3HvwBocgKOxqRjehoR9DFKNFYtOwCGYCszobeCbl26N6yyQ6g8X/Wex/rBPsNEV6qAMaJPMynIHQCoSqS9JSMmwef51LflTgCRszU7DvAGiV6mHWfsaVUAAAAASUVORK5CYII=), auto;
 }
 
 .alert-warning {
@@ -70,33 +14,45 @@ html, body {
     background: rgba(80, 247, 88, 0.5);
 }
 
-.hidden {
-    display: none;
-}
-
-.settings {
-    margin: 5px;
-}
-
-.button-container {
-    margin-top: 15px;
-}
-.basic-input {
-    background-color:rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(193, 193, 193, 0.5);
-    border-radius: 3px;
-}
-
 .small-input {
     width: 45px;
     text-align: right;
 }
 
 .medium-input {
-    width: 90px;
+    width: 150px;
     text-align: left;    
 }
 
 .medium-input:first-child {
     margin-right: 25px;
+}
+
+body {
+    margin: 10px;
+}
+
+.header {
+    margin-bottom: 75px;
+}
+
+.board {
+    display: grid;
+    margin: 0 50px;
+}
+
+.field {
+    border: 1px solid black;
+    min-height: 75px;
+    font-size: 75px;
+    text-align: center;
+}
+
+.popup-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.hidden {
+    display: none;
 }
