@@ -53,6 +53,15 @@ body {
     grid-template-columns: repeat(2, 1fr);
 }
 
+.player_symbol_X {
+    color: red;
+}
+
+.player_symbol_O {
+    color: blue;
+}
+
+/*  Keep this last or I'll need to do the !important thing  */
 .hidden {
     display: none;
 }

@@ -74,7 +74,10 @@ function addItem(field) {
 
         curElement = (curElement == 'X') ? 'O' : 'X';
         turnEl.textContent = curElement;
-        
+        field.classList.add(`player_symbol_${curElement}`);
+        turnEl.classList.add('player_symbol_X', 'player_symbol_O');
+        turnEl.classList.remove(`player_symbol_${curElement}`);
+
         checkWinner();
     }
 }
@@ -92,6 +95,7 @@ function checkWinner() {
     let haveWinner = false;
     let filledFields = 0;
     let winner;
+    let winnerName;
 
     //Loop through fields and check horizontal winner
     fields.forEach(function(field, idx) {
@@ -133,7 +137,7 @@ function checkWinner() {
             if (series === winX) {
                 winner = 1;
             }
-            showPopup('Winner winner', 'Chicken Dinner', 'warning');
+            
             haveWinner = true;
         }
     });
@@ -146,7 +150,7 @@ function checkWinner() {
                 if (serie === winX) {
                     winner = 1;
                 }
-                showPopup('Winner winner', 'Chicken Dinner', 'warning');
+                
                 haveWinner = true;
             }
         });
@@ -159,7 +163,7 @@ function checkWinner() {
             if (lrDiag === winX) {
                 winner = 1;
             }
-            showPopup('Winner winner', 'Chicken Dinner', 'warning');
+
             haveWinner = true;
         }
     }
@@ -170,19 +174,21 @@ function checkWinner() {
             if (rlDiag === winX) {
                 winner = 1;
             }
-            showPopup('Winner winner', 'Chicken Dinner', 'warning');
+
             haveWinner = true;
         }
     }
 
     if (haveWinner) {
         if (winner == 1) {
+            winnerName = playerOne;
             if (players[playerOne]) {
                 players[playerOne]++;
             } else {
                 players[playerOne] = 1;
             }
         } else {
+            winnerName = playerTwo;
             if (players[playerTwo]) {
                 players[playerTwo]++;
             } else {
@@ -191,11 +197,10 @@ function checkWinner() {
         }
         playing = false;
         localStorage.setItem('bke_players', JSON.stringify(players));
+        showPopup('Winner winner', `Chicken Dinner - ${winnerName} has won the game`, 'warning');
 
         showHighScore();
-    }
-
-    if ((filledFields === boardVH*boardVH) && !haveWinner) {
+    } else if ((filledFields === boardVH*boardVH)) {
         showPopup('Loser loser', 'Chicken Foser', 'danger');
         playing = false;
     }
