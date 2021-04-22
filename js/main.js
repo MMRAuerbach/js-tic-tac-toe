@@ -313,6 +313,7 @@ function showPopup(title, message) {
     }
 
     popupElement.classList.remove('hidden');
+    window.scroll(0, 0);  
 }
 
 function showHighScore() {
