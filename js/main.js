@@ -20,7 +20,7 @@ const xSound = new Audio('lib/tic.mp3');
 const ySound = new Audio('lib/tac.mp3');
 const weSound = new Audio('lib/we2.mp3');
 
-//Define all the changable arrays
+//Define all the changable variables
 let boardVH;
 let fields;
 let winX;
