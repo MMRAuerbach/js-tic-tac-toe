@@ -16,11 +16,11 @@
             <h2>Succes met spelen!</h2>
         </section>
         <section class="players">
-            <article class="player-article">Player one (X): <span class="p-one-name"></span></article>
-            <article class="player-article">Player two (O): <span class="p-two-name"></span></article>
+            <article class="player-article">Speler een (X): <span class="p-one-name"></span></article>
+            <article class="player-article">Player twee (O): <span class="p-two-name"></span></article>
         </section>
         <section>
-            <input type="button" class="basic-input reset-game" value="Reset game">
+            <input type="button" class="nes-btn is-primary reset-game" value="Reset game">
         </section>
     </header>
     <main class="main">
@@ -30,21 +30,30 @@
                     Geef aan hoeveel vakjes je het bord wilt
                 </div>
                 <div>
-                    <input type="number" class="basic-input small-input board-size" value="3">
+                    <div class="nes-field">
+                        <label for="name_field">Your name</label>
+                        <input type="text" name="name_field" class="nes-input small-input board-size" value="3">
+                      </div>
                 </div>
             </article>
-            <article>
-                <div>
+            <section class="base-section">
+                <h3>
                     Geef de namen van de spelers
-                </div>
-                    <div>
-                    <input type="text" class="basic-input medium-input player-size player-one" value="PlayerOne">
-                    <input type="text" class="basic-input medium-input player-size player-two" value="PlayerTwo">
-                </div>
-            </article>
+                </h3>
+                <section>
+                    <article class="nes-field">
+                        <label for="name_field">Speler 1</label>
+                        <input type="text" class="nes-input is-success player-one" value="PlayerOne">
+                    </article>
+                    <article class="nes-field">
+                        <label for="name_field">Speler 2</label>
+                        <input type="text" class="nes-input is-success player-size player-two" value="PlayerTwo">
+                    </article>
+                </section>
+            </section>
             <article>
                 <div class="button-container">
-                    <input type="button" class="basic-input start-button" value="Klik om te starten">
+                    <input type="button" class="nes-btn is-primary start-button" value="Klik om te starten">
                 </div>
             </article>
         </section>
@@ -53,7 +62,7 @@
                 <article class="popup alert-warning">
                     <h3 class="title">Winner winner</h3>
                     <p class="text">Chicken Dinner</p>
-                    <input type="button" value="Click here to continue">
+                    <input type="button" class="nes-btn is-primary" value="Click here to continue">
                 </article>
                 <article class="alert-warning">
                     <h3>Highscore</h3>
