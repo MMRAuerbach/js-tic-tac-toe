@@ -105,13 +105,17 @@ function addItem(field) {
             } else {
                 xSound.play();
             }
+            
+            document.querySelectorAll('.field').forEach(function(fld) {
+                if (fld.textContent == curElement) {
+                    checkStreak(fld);
+                }
+            });
 
             curElement = (curElement == 'X') ? 'O' : 'X';
             turnEl.textContent = curElement;
             turnEl.classList.remove('player_symbol_X', 'player_symbol_O');
             turnEl.classList.add(`player_symbol_${curElement}`);
-            
-            checkStreak(field);
         }
     }
 }
