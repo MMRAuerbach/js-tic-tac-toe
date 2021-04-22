@@ -13,6 +13,7 @@ const pTwoNamePlace = document.querySelector('.p-two-name');
 const resetButton = document.querySelector('.reset-game');
 const highScoreEl = document.querySelector('.highschore');
 const turnEl = document.querySelector('.turn');
+const gameTypes = ["bke", "vor"];
 
 //Initialize the sounds
 const xSound = new Audio('lib/tic.mp3');
@@ -27,6 +28,7 @@ let winO;
 let playerOne;
 let playerTwo;
 let players;
+let gameType;
 let curElement = 'X';
 let playing = false;
 
@@ -43,10 +45,11 @@ if (popupElementSection) {
 //When people click on the start button, start the game
 if (startButton) {
     startButton.addEventListener('click', function() {
-        boardFieldsInputValue = parseInt(boardFieldsInput.value);
-        //Larger then 10x10 will slow down computer
-        if (isNaN(boardFieldsInputValue) || boardFieldsInputValue > 10) {
-            boardFieldsInputValue = 3;
+        chosenGameType = boardFieldsInput.value;
+        gameType = "bke";
+
+        if (gameTypes.includes(chosenGameType)) {
+            gameType = chosenGameType;
         }
 
         playerOne = pOneField.value;
@@ -54,7 +57,7 @@ if (startButton) {
         pOneNamePlace.textContent = playerOne;
         pTwoNamePlace.textContent = playerTwo;
 
-        initBoard(boardFieldsInputValue)
+        initBoard()
     });
 }
 
@@ -65,7 +68,29 @@ if (resetButton) {
 //Add an item (X or O) to the field. Might be changed later
 function addItem(field) {
     if (field.textContent.trim() == '' && playing) {
-        field.textContent = curElement;
+        if (gameType === 'vor') {
+            const rowNumber = field.dataset.row_number;
+            const sameRows = Array.prototype.slice.call(document.querySelectorAll(`[data-row_number="${rowNumber}"]`));
+            let lastRow = -2;
+            sameRows.forEach(function(el, idx) {
+                const filler = el.textContent;
+                if (lastRow < 0 && (filler === 'X' || filler === 'O')) {
+                    lastRow = idx-1;
+                }
+            });
+            
+            if (lastRow === -2) {
+                lastRow = sameRows.length-1;
+            }
+
+            const searchField = sameRows[lastRow];
+            searchField.textContent = curElement;
+            searchField.classList.add(`player_symbol_${curElement}`);
+        } else {
+            field.textContent = curElement;
+            field.classList.add(`player_symbol_${curElement}`);
+        }
+
         if (curElement == 'X') {
             ySound.play();
         } else {
@@ -74,12 +99,11 @@ function addItem(field) {
 
         curElement = (curElement == 'X') ? 'O' : 'X';
         turnEl.textContent = curElement;
-        field.classList.add(`player_symbol_${curElement}`);
         turnEl.classList.add('player_symbol_X', 'player_symbol_O');
         turnEl.classList.remove(`player_symbol_${curElement}`);
-
-        checkWinner();
     }
+
+    checkWinner();
 }
 
 //Check if someone won or if there is a draw. 
@@ -97,61 +121,78 @@ function checkWinner() {
     let winner;
     let winnerName;
 
+    //We need to loop through the fields but in reverse order...
+    const loopFields = Array.prototype.slice.call(fields).reverse();
     //Loop through fields and check horizontal winner
-    fields.forEach(function(field, idx) {
-        const fieldSymbol = field.textContent;
-        const theModulo = (idx%boardVH);
+    loopFields.forEach(function(field, idx) {
+        if (field.textContent === 'X' || field.textContent === 'O') {
+            const fieldSymbol = field.textContent;
+            const theModulo = (idx%boardVH);
+            let previousSymbol;
 
-        if (fieldSymbol === 'X' || fieldSymbol === 'O')
+            if (!vertSeries[theModulo])
+                vertSeries[theModulo] = '';
+
             filledFields++;
 
-        if (theModulo === 0)
-            series = '';
+            if (theModulo === 0 || previousSymbol !== fieldSymbol)
+                series = '';
 
-        if (!vertSeries[theModulo])
-            vertSeries[theModulo] = '';
+            const lastSymbol = vertSeries[theModulo][vertSeries[theModulo].length-1];
 
-        vertSeries[theModulo] += fieldSymbol;
-        series += fieldSymbol;
-
-        if (rlNext === theModulo && (idx < ((boardVH*boardVH) -1))) {
-            rlNext--;
-            if (rlNext < 0)
-                rlNext = boardVH-1;
-
-            rlDiag += fieldSymbol;
-        }
-
-        if (lrNext === theModulo) {
-            if (lrCountNext) {
-                lrDiag += fieldSymbol;
-                lrNext++;
-                lrCountNext = false;
+            if (lastSymbol === fieldSymbol) {
+                vertSeries[theModulo] += fieldSymbol;
             } else {
-                lrCountNext = true;
-            }
-        }
-
-        if (series === winX || series === winO) {
-            winner = 2;
-            if (series === winX) {
-                winner = 1;
+                console.log('12345' + fieldSymbol);
+                vertSeries[theModulo] = fieldSymbol;
             }
             
-            haveWinner = true;
+            series += fieldSymbol;
+
+            if (rlNext === theModulo && (idx < ((boardVH*boardVH) -1))) {
+                rlNext--;
+                if (rlNext < 0)
+                    rlNext = boardVH-1;
+
+                rlDiag += fieldSymbol;
+            }
+
+            if (lrNext === theModulo) {
+                if (lrCountNext) {
+                    lrDiag += fieldSymbol;
+                    lrNext++;
+                    lrCountNext = false;
+                } else {
+                    lrCountNext = true;
+                }
+            }
+
+            if (series === winX || series === winO) {
+                winner = 2;
+                if (series === winX) {
+                    winner = 1;
+                }
+                
+                haveWinner = true;
+            }
+
+            previousSymbol = fieldSymbol;
         }
     });
 
     //Check for vertical winners
     if (!haveWinner) {
         vertSeries.forEach(function(serie) {
-            if (serie === winX || serie === winO) {
-                winner = 2;
-                if (serie === winX) {
-                    winner = 1;
+            if (serie.length === winX.length) {
+                console.log(serie);
+                if (serie.trim() === winX || serie.trim() === winO) {
+                    winner = 2;
+                    if (serie.trim() === winX) {
+                        winner = 1;
+                    }
+                    
+                    haveWinner = true;
                 }
-                
-                haveWinner = true;
             }
         });
     }
@@ -219,19 +260,31 @@ function resetGame() {
 }
 
 //Initialize board, create fields
-function initBoard(rowCol) {
+function initBoard() {
+    const rowCol = (gameType === "vor") ? 8 : 3;
+
     board.innerHTML = '';
     board.style = `grid-template-columns: repeat(${rowCol}, 1fr)`;
     winX = '';
     winO = '';
     for (let i = 0; i < (rowCol*rowCol); i++) {
-        board.innerHTML += '<div class="field">&nbsp;</div>';//createElement and appendChild would be better
+        const newField = document.createElement('div');
+        newField.classList.add('field');
+        newField.dataset.row_number = (i%rowCol);
+        newField.innerHTML = '&nbsp';
 
-        if ((i%rowCol) === 0) {
-            winX += 'X';
-            winO += 'O';
+        //Create the winning streak
+        winX = 'XXX';
+        winO = 'OOO';
+
+        if (gameType === "vor") {
+            winX = 'XXXX';
+            winO = 'OOOO';
         }
+
+        board.appendChild(newField);
     }
+    
 
     //Add event handler on the fields
     fields = document.querySelectorAll('.field');
