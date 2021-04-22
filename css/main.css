@@ -41,8 +41,9 @@ body {
 
 .popup-body {
     display: grid;
+    gap: 25px;
     grid-template-columns: repeat(2, 1fr);
-    margin: 40px;
+    margin: 20px;
 }
 
 .player_symbol_X {

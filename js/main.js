@@ -209,7 +209,7 @@ function checkWinner() {
 //Reset the game and show the start/ settings page again
 function resetGame() {
     settings.classList.remove('hidden');
-    popupElement.add('hidden');
+    popupElement.classList.add('hidden');
     gameField.classList.add('hidden');
     
     weSound.pause();

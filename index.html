@@ -25,15 +25,20 @@
     </header>
     <main class="main">
         <section class="settings">
-            <article>
+            <section class="base-section">
                 <div>
                     <div class="nes-field">
-                        <label for="name_field">Geef aan hoeveel velden je wilt</label>
-                        <input type="text" name="name_field" class="nes-input small-input board-size" value="3">
-                      </div>
+                        <label for="name_field">Welk spel wil je spelen</label>
+                        <div class="nes-select is-success">
+                          <select required name="success_select" class="board-size">
+                            <option value="" disabled selected hidden>Select...</option>
+                            <option value="0">Boter Kaas en Eieren</option>
+                            <option value="1">Not to be</option>
+                          </select>
+                        </div>
+
+                    </div>
                 </div>
-            </article>
-            <section class="base-section">
                 <h3>
                     Geef de namen van de spelers
                 </h3>
@@ -59,7 +64,7 @@
                 <p class="title">Winner winner</h3>
                 <section class="popup-body">
                     <article>
-                        <p class="text">Chicken Dinner</p>
+                        <h3 class="text">Chicken Dinner</p>
                     </article>
                     <article>
                         <h3>Highscore</h3>
