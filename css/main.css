@@ -63,3 +63,18 @@ body {
 .hidden {
     display: none;
 }
+
+
+.tic-tac-toe {
+    position: relative;
+}
+
+section.popup-wrapper {
+    position: absolute!important;
+    width: 100%;
+    top: 25px;
+}
+
+.nes-container.is-dark {
+    background-color: rgba(33, 37, 41, 0.5);
+}

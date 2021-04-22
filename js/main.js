@@ -31,6 +31,7 @@ let players;
 let gameType;
 let curElement = 'X';
 let playing = false;
+let filledFields = 0;
 
 //Create eventlistner on the selection popup to hide it when clicked
 if (popupElementSection) {
@@ -67,183 +68,182 @@ if (resetButton) {
 
 //Add an item (X or O) to the field. Might be changed later
 function addItem(field) {
-    if (field.textContent.trim() == '' && playing) {
+    let changePlayer = false;
+    if (playing) {
+        filledFields++;
         if (gameType === 'vor') {
-            const rowNumber = field.dataset.row_number;
-            const sameRows = Array.prototype.slice.call(document.querySelectorAll(`[data-row_number="${rowNumber}"]`));
-            let lastRow = -2;
-            sameRows.forEach(function(el, idx) {
+            const colNumber = field.dataset.col_number;
+            const sameCols = Array.prototype.slice.call(document.querySelectorAll(`[data-col_number="${colNumber}"]`));
+            let lastCol = -2;
+            sameCols.forEach(function(el, idx) {
                 const filler = el.textContent;
-                if (lastRow < 0 && (filler === 'X' || filler === 'O')) {
-                    lastRow = idx-1;
+                if (lastCol < 0 && (filler === 'X' || filler === 'O')) {
+                    lastCol = idx-1;
                 }
             });
             
-            if (lastRow === -2) {
-                lastRow = sameRows.length-1;
+            if (lastCol === -2) {
+                lastCol = sameCols.length-1;
             }
 
-            const searchField = sameRows[lastRow];
-            searchField.textContent = curElement;
-            searchField.classList.add(`player_symbol_${curElement}`);
-        } else {
+            const searchField = sameCols[lastCol];
+            if (searchField.textContent.trim() === '') {
+                searchField.textContent = curElement;
+                searchField.classList.add(`player_symbol_${curElement}`);
+                field = searchField;
+                changePlayer = true;
+            }
+        } else if (field.textContent.trim() == '') {
             field.textContent = curElement;
             field.classList.add(`player_symbol_${curElement}`);
+            changePlayer = true;
         }
 
-        if (curElement == 'X') {
-            ySound.play();
-        } else {
-            xSound.play();
-        }
+        if (changePlayer) {
+            if (curElement == 'X') {
+                ySound.play();
+            } else {
+                xSound.play();
+            }
 
-        curElement = (curElement == 'X') ? 'O' : 'X';
-        turnEl.textContent = curElement;
-        turnEl.classList.add('player_symbol_X', 'player_symbol_O');
-        turnEl.classList.remove(`player_symbol_${curElement}`);
+            curElement = (curElement == 'X') ? 'O' : 'X';
+            turnEl.textContent = curElement;
+            turnEl.classList.remove('player_symbol_X', 'player_symbol_O');
+            turnEl.classList.add(`player_symbol_${curElement}`);
+            
+            checkStreak(field);
+        }
     }
-
-    checkWinner();
 }
 
-//Check if someone won or if there is a draw. 
-function checkWinner() {
-    const vertSeries = [];
-
-    let lrDiag = '';
-    let lrNext = 0;
-    let lrCountNext = true;
-    let rlNext = (boardVH-1);
-    let rlDiag = '';
-    let series = '';
-    let haveWinner = false;
-    let filledFields = 0;
-    let winner;
-    let winnerName;
-
-    //We need to loop through the fields but in reverse order...
-    const loopFields = Array.prototype.slice.call(fields).reverse();
-    //Loop through fields and check horizontal winner
-    loopFields.forEach(function(field, idx) {
-        if (field.textContent === 'X' || field.textContent === 'O') {
-            const fieldSymbol = field.textContent;
-            const theModulo = (idx%boardVH);
-            let previousSymbol;
-
-            if (!vertSeries[theModulo])
-                vertSeries[theModulo] = '';
-
-            filledFields++;
-
-            if (theModulo === 0 || previousSymbol !== fieldSymbol)
-                series = '';
-
-            const lastSymbol = vertSeries[theModulo][vertSeries[theModulo].length-1];
-
-            if (lastSymbol === fieldSymbol) {
-                vertSeries[theModulo] += fieldSymbol;
-            } else {
-                console.log('12345' + fieldSymbol);
-                vertSeries[theModulo] = fieldSymbol;
-            }
-            
-            series += fieldSymbol;
-
-            if (rlNext === theModulo && (idx < ((boardVH*boardVH) -1))) {
-                rlNext--;
-                if (rlNext < 0)
-                    rlNext = boardVH-1;
-
-                rlDiag += fieldSymbol;
-            }
-
-            if (lrNext === theModulo) {
-                if (lrCountNext) {
-                    lrDiag += fieldSymbol;
-                    lrNext++;
-                    lrCountNext = false;
-                } else {
-                    lrCountNext = true;
+function checkStreak(field) {
+    //Each field has max 7 other fields to check (never above it)
+    const row = parseInt(field.dataset.row_number);
+    const col = parseInt(field.dataset.col_number);
+    const symbol = field.textContent;
+    const neighbours = {
+        topleft: [row-1, col-1],
+        topright: [row-1, col+1],
+        left: [row, col-1],
+        right: [row, col+1],
+        bottomleft: [row+1, col-1],
+        bottom: [row+1, col],
+        bottomright: [row+1, col+1],
+    }
+    
+    for (let key in neighbours) {
+        const chkRow = neighbours[key][0];
+        const chkCol = neighbours[key][1];
+        const chkField = document.querySelector(`[data-col_number="${chkCol}"][data-row_number="${chkRow}"]`);
+        if (chkField) {
+            const chkSymbol = chkField.textContent;
+            if (chkSymbol === symbol) {
+                let chkFieldsStreak = [];
+                console.log(key);
+                switch (key) {
+                    case 'bottom':
+                        chkFieldsStreak = [
+                            {row: chkRow+1, col: chkCol},
+                            {row: chkRow+2, col: chkCol},
+                            {row: chkRow+3, col: chkCol},
+                        ];
+                    break;
+                    case 'bottomleft':
+                        chkFieldsStreak = [
+                            {row: chkRow+1, col: chkCol-1},
+                            {row: chkRow+2, col: chkCol-2},
+                            {row: chkRow+3, col: chkCol-3},
+                        ];
+                    break;
+                    case 'bottomright':
+                        chkFieldsStreak = [
+                            {row: chkRow+1, col: chkCol+1},
+                            {row: chkRow+2, col: chkCol+2},
+                            {row: chkRow+3, col: chkCol+3},
+                        ];
+                    break;
+                    case 'top':
+                        chkFieldsStreak = [
+                            {row: chkRow-1, col: chkCol},
+                            {row: chkRow-2, col: chkCol},
+                            {row: chkRow-3, col: chkCol},
+                        ];
+                    break;
+                    case 'topleft':
+                        chkFieldsStreak = [
+                            {row: chkRow-1, col: chkCol-1},
+                            {row: chkRow-2, col: chkCol-2},
+                            {row: chkRow-3, col: chkCol-3},
+                        ];
+                    break;
+                    case 'topright':
+                        chkFieldsStreak = [
+                            {row: chkRow-1, col: chkCol+1},
+                            {row: chkRow-2, col: chkCol+2},
+                            {row: chkRow-3, col: chkCol+3},
+                        ];
+                    break;
+                    case 'left':
+                        chkFieldsStreak = [
+                            {row: chkRow, col: chkCol-1},
+                            {row: chkRow, col: chkCol-2},
+                            {row: chkRow, col: chkCol-3},
+                        ];
+                    break;
+                    case 'right':
+                        chkFieldsStreak = [
+                            {row: chkRow, col: chkCol+1},
+                            {row: chkRow, col: chkCol+2},
+                            {row: chkRow, col: chkCol+3},
+                        ];
+                    break;
                 }
-            }
 
-            if (series === winX || series === winO) {
-                winner = 2;
-                if (series === winX) {
-                    winner = 1;
-                }
-                
-                haveWinner = true;
-            }
+                let currentStreak = 2; //We always have a 2 symbol match...
+                chkFieldsStreak.forEach(function(item) {
+                    const theRow = item.row;
+                    const theCol = item.col;
+                    const chkThisField = document.querySelector(`[data-col_number="${theCol}"][data-row_number="${theRow}"]`);
 
-            previousSymbol = fieldSymbol;
-        }
-    });
-
-    //Check for vertical winners
-    if (!haveWinner) {
-        vertSeries.forEach(function(serie) {
-            if (serie.length === winX.length) {
-                console.log(serie);
-                if (serie.trim() === winX || serie.trim() === winO) {
-                    winner = 2;
-                    if (serie.trim() === winX) {
-                        winner = 1;
+                    console.log(chkThisField);
+                    if (chkThisField) {
+                        const chkContent = chkThisField.textContent;
+                        if (chkContent === symbol) {
+                            currentStreak++;
+                        }
                     }
-                    
-                    haveWinner = true;
+                });
+
+                const streakAmount = (gameType === 'vor') ? 4 : 3;
+                if (currentStreak === streakAmount) {
+                    if (symbol === 'X') {
+                        winnerName = playerOne;
+                        if (players[playerOne]) {
+                            players[playerOne]++;
+                        } else {
+                            players[playerOne] = 1;
+                        }
+                    } else {
+                        winnerName = playerTwo;
+                        if (players[playerTwo]) {
+                            players[playerTwo]++;
+                        } else {
+                            players[playerTwo] = 1;
+                        }
+                    }
+                    playing = false;
+                    localStorage.setItem('bke_players', JSON.stringify(players));
+                    showPopup('Winner winner', `Chicken Dinner - ${winnerName} has won the game`);
+            
+                    showHighScore();
+                
+                //We need something for this...
+                } else if ((filledFields === boardVH*boardVH)) {
+                    showPopup('Loser loser', 'Chicken Foser');
+                    playing = false;
                 }
             }
-        });
-    }
-
-    //Check for diagonal winners
-    if (!haveWinner) {
-        if (lrDiag == winX || lrDiag == winO) {
-            winner = 2;
-            if (lrDiag === winX) {
-                winner = 1;
-            }
-
-            haveWinner = true;
         }
-    }
-
-    if (!haveWinner) {
-        if (rlDiag == winX || rlDiag == winO) {
-            winner = 2;
-            if (rlDiag === winX) {
-                winner = 1;
-            }
-
-            haveWinner = true;
-        }
-    }
-
-    if (haveWinner) {
-        if (winner == 1) {
-            winnerName = playerOne;
-            if (players[playerOne]) {
-                players[playerOne]++;
-            } else {
-                players[playerOne] = 1;
-            }
-        } else {
-            winnerName = playerTwo;
-            if (players[playerTwo]) {
-                players[playerTwo]++;
-            } else {
-                players[playerTwo] = 1;
-            }
-        }
-        playing = false;
-        localStorage.setItem('bke_players', JSON.stringify(players));
-        showPopup('Winner winner', `Chicken Dinner - ${winnerName} has won the game`);
-
-        showHighScore();
-    } else if ((filledFields === boardVH*boardVH)) {
-        showPopup('Loser loser', 'Chicken Foser');
-        playing = false;
     }
 }
 
@@ -267,10 +267,17 @@ function initBoard() {
     board.style = `grid-template-columns: repeat(${rowCol}, 1fr)`;
     winX = '';
     winO = '';
+    let rowNr = 0;
     for (let i = 0; i < (rowCol*rowCol); i++) {
+        const colNr = (i%rowCol);
         const newField = document.createElement('div');
+        if (colNr === 0) {
+            rowNr++;
+        }
+
         newField.classList.add('field');
-        newField.dataset.row_number = (i%rowCol);
+        newField.dataset.col_number = colNr;
+        newField.dataset.row_number = rowNr;
         newField.innerHTML = '&nbsp';
 
         //Create the winning streak
@@ -283,21 +290,16 @@ function initBoard() {
         }
 
         board.appendChild(newField);
+
+        newField.addEventListener('click', function() {
+            addItem(this);
+        });
     }
     
-
-    //Add event handler on the fields
-    fields = document.querySelectorAll('.field');
-    fields.forEach(function(field) {
-        field.addEventListener('click', function() {
-            addItem(field);
-        });
-    });
-
     boardVH = rowCol;
     playing = true; 
     settings.classList.add('hidden');
-    popupElement.classList.add('hidden');
+    // popupElement.classList.add('hidden');
     gameField.classList.remove('hidden');
 }
 
@@ -338,3 +340,7 @@ function getPlayers() {
         localStorage.setItem('bke_players', JSON.stringify(players));
     }
 }
+
+gameType = 'vor';
+
+initBoard();
