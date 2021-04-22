@@ -341,7 +341,3 @@ function getPlayers() {
         localStorage.setItem('bke_players', JSON.stringify(players));
     }
 }
-
-gameType = 'vor';
-
-initBoard();
