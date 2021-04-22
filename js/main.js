@@ -2,7 +2,7 @@
 const gameField = document.querySelector('.tic-tac-toe');
 const board = document.querySelector('.board');
 const popupElement = document.querySelector('.popup-wrapper');
-const popupElementSection = document.querySelector('.popup');
+const popupElementSection = document.querySelector('.popup-continue');
 const startButton = document.querySelector('.start-button');
 const settings = document.querySelector('.settings');
 const boardFieldsInput = document.querySelector('.board-size');
@@ -197,11 +197,11 @@ function checkWinner() {
         }
         playing = false;
         localStorage.setItem('bke_players', JSON.stringify(players));
-        showPopup('Winner winner', `Chicken Dinner - ${winnerName} has won the game`, 'warning');
+        showPopup('Winner winner', `Chicken Dinner - ${winnerName} has won the game`);
 
         showHighScore();
     } else if ((filledFields === boardVH*boardVH)) {
-        showPopup('Loser loser', 'Chicken Foser', 'danger');
+        showPopup('Loser loser', 'Chicken Foser');
         playing = false;
     }
 }
@@ -249,13 +249,11 @@ function initBoard(rowCol) {
 }
 
 //Show the popup message with overlay
-function showPopup(title, message, alert = warning) {
+function showPopup(title, message) {
     popupElement.querySelector('.title').textContent = title;
     popupElement.querySelector('.text').textContent = message;
-    popupElement.querySelector('.popup').classList.remove('alert-danger','alert-warning');
-    popupElement.querySelector('.popup').classList.add(`alert-${alert}`);
 
-    if (alert === 'warning') {
+    if (title.toLowerCase() === 'winner winner') {
         weSound.play();
     }
 

@@ -27,11 +27,8 @@
         <section class="settings">
             <article>
                 <div>
-                    Geef aan hoeveel vakjes je het bord wilt
-                </div>
-                <div>
                     <div class="nes-field">
-                        <label for="name_field">Your name</label>
+                        <label for="name_field">Geef aan hoeveel velden je wilt</label>
                         <input type="text" name="name_field" class="nes-input small-input board-size" value="3">
                       </div>
                 </div>
@@ -58,18 +55,22 @@
             </article>
         </section>
         <section class="tic-tac-toe hidden">
-            <section class="popup-wrapper hidden">
-                <article class="popup alert-warning">
-                    <h3 class="title">Winner winner</h3>
-                    <p class="text">Chicken Dinner</p>
-                    <input type="button" class="nes-btn is-primary" value="Click here to continue">
-                </article>
-                <article class="alert-warning">
-                    <h3>Highscore</h3>
-                    <article class="highschore"></article>
-                </article>
+            <section class="popup-wrapper nes-container is-rounded is-dark hidden with-title">
+                <p class="title">Winner winner</h3>
+                <section class="popup-body">
+                    <article>
+                        <p class="text">Chicken Dinner</p>
+                    </article>
+                    <article>
+                        <h3>Highscore</h3>
+                        <article class="highschore"></article>
+                    </article>
+                </section>
+                <section>
+                    <input type="button" class="nes-btn is-primary popup-continue" value="Klik om door te gaan">
+                </section>
             </section>    
-            <section>
+            <section class="board-container">
                 <article>Currently Playing: <span class="turn">X</span></article>
                 <article class="board"></article>
             </section>

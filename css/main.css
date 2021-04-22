@@ -39,7 +39,7 @@ body {
     text-align: center;
 }
 
-.popup-wrapper {
+.popup-body {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     margin: 40px;
